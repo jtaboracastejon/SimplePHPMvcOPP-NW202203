@@ -19,5 +19,14 @@
         <button type="submit" name="btnGuardar">
             Guardar
         </button>
+        <button id="btnCancelar">
+            Cancelar
+        </button>
     </fieldset>
+    <script>
+        document.getElementById("btnCancelar").addEventListener("click",function(event){
+            event.preventDefault();
+            window.location.href = "index.php?page=Mnt-Quotes";
+        })
+    </script>
 </form>

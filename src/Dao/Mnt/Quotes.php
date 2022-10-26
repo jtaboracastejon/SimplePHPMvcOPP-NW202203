@@ -13,5 +13,10 @@ class Quotes extends Table{
         );
         return self::executeNonQuery($sqlstr, $params);
     }
+
+    public static function getAllQuotes(){
+        $selectSql = "SELECT * FROM quotes;";
+        return self::obtenerRegistros($selectSql, array());
+    }
 }
 ?>
