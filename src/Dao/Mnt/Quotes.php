@@ -18,5 +18,12 @@ class Quotes extends Table{
         $selectSql = "SELECT * FROM quotes;";
         return self::obtenerRegistros($selectSql, array());
     }
+
+    public static function getById($quoteId){
+        $selectSql = "SELECT * FROM quotes WHERE quoteId=:quoteId;";
+        return self::obtenerUnRegistro($selectSql, array(
+            "quoteId"=>$quoteId
+        ));
+    }
 }
 ?>

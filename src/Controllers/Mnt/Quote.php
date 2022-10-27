@@ -1,31 +1,92 @@
-<?php 
+<?php
+
 namespace Controllers\Mnt;
 
 use Controllers\PublicController;
 use Views\Renderer;
 
-class Quote extends PublicController{
-    public function run() :void{
-        $viewData = array();
-        $viewData["quote"] = "";
-        $viewData["author"] = "";
-        $viewData["status"] = "";
-        $viewData["act_selected"] = true;
-        $viewData["ina_selected"] = false;
-
-        if($this->isPostBack()){
-            $viewData["quote"] = $_POST["quote"];
-            $viewData["author"] = $_POST["author"];
-            $viewData["status"] = $_POST["status"];
-            $viewData["act_selected"] = $_POST["status"] === "ACT";
-            $viewData["ina_selected"] = $_POST["status"] === "INA";
+class Quote extends PublicController
+{
+    private $arrModeDsc = array(
+        "INS" => "Agregar nueva cita",
+        "UPD" => "Editar %s %s",
+        "DEL" => "Eliminando %s %s",
+        "DSP" => "Detalle de %s %s"
+    );
+    private $viewData = array(
+        "mode" => "",
+        "mode_dsc" => "",
+        "quoteid" => "",
+        "quote" => "",
+        "author" => "",
+        "status" => "",
+        "act_selected" => true,
+        "ina_selected" => false,
+    );
+    public function run(): void
+    {
+        $this->onForm_loaded();
+        if ($this->isPostBack()) {
+            $this->viewData["quote"] = $_POST["quote"];
+            $this->viewData["author"] = $_POST["author"];
+            $this->viewData["status"] = $_POST["status"];
+            $this->viewData["act_selected"] = $_POST["status"] === "ACT";
+            $this->viewData["ina_selected"] = $_POST["status"] === "INA";
             \Dao\Mnt\Quotes::AgregarQuote(
-                $viewData["quote"], 
-                $viewData["author"], 
-                $viewData["status"]
+                $this->viewData["quote"],
+                $this->viewData["author"],
+                $this->viewData["status"]
             );
         }
-        Renderer::render("mnt/quote", $viewData);
+        $this->pre_render();
+        Renderer::render("mnt/quote", $this->viewData);
+    }
+
+    private function onForm_loaded()
+    {
+        if (!isset($_GET["mode"])) {
+            $this->errorRedir();
+        }
+        $this->viewData["mode"] = $_GET["mode"];
+        if (!isset($this->arrModeDsc[$this->viewData["mode"]])) {
+            $this->errorRedir();
+        }
+
+        if ($this->viewData["mode"] !== "INS") {
+            if (!isset($_GET["quoteId"])) {
+                $this->errorRedir();
+            }
+
+            $quoteId = intval($_GET["quoteId"]);
+            $dbQuote = \Dao\Mnt\Quotes::getById($quoteId);
+            \Utilities\ArrUtils::mergeFullArrayTo($dbQuote,$this->viewData);
+        }
+    }
+
+    private function on_update_clicked()
+    {
+    }
+
+    private function on_delete_clicked()
+    {
+    }
+
+    private function on_insert_clicked()
+    {
+    }
+
+    private function pre_render()
+    {
+        $this->viewData["act_selected"] = $this->viewData["status"] === "ACT";
+        $this->viewData["ina_selected"] = $this->viewData["status"] === "INA";
+    }
+
+    //Utilities
+    private function errorRedir()
+    {
+        \Utilities\Site::redirectToWithMsg(
+            "index.php?page=Mnt-Quotes",
+            "Algo Inesperado sucedió!"
+        );
     }
 }
-?>
