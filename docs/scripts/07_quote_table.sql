@@ -1,5 +1,5 @@
 CREATE TABLE nw202203.quotes (    
-	quoteid BIGINT(18) auto_increment NOT NULL,
+	quoteId BIGINT(18) auto_increment NOT NULL,
 	quote varchar(512) NULL,
 	author varchar(128) NULL,
 	status char(3) NULL,
