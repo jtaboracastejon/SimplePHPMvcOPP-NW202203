@@ -15,7 +15,7 @@
             {{foreach quotes}}
             <tr>
                 <td>{{quoteId}}</td>
-                <td>{{quote}}</td>
+                <td><a href="index.php?page=Mnt-Quote&mode=DSP&quoteId={{quoteId}}">{{quote}}</a></td>
                 <td>{{author}}</td>
                 <td>{{status}}</td>
                 <td>{{created}}</td>

@@ -25,5 +25,21 @@ class Quotes extends Table{
             "quoteId"=>$quoteId
         ));
     }
+
+    public static function ActualizarQuote($quoteId, $quote, $author, $status){
+        $updateSrt="UPDATE quotes SET quote=:quote, author=:author, status=:status, updated=now() WHERE quoteId=:quoteId";
+        $params = array(
+            "quoteId" => $quoteId,
+            "quote" => $quote,
+            "author" => $author,
+            "status" => $status
+        );
+        return self::executeNonQuery($updateSrt, $params);
+    }
+
+    public static function EliminarQuote($quoteId){
+        $deleteStr = "DELETE FROM quotes WHERE quoteId=:quoteId;";
+        return self::executeNonQuery($deleteStr, array("quoteId"=>$quoteId));
+    }
 }
 ?>
